@@ -1,53 +1,44 @@
 #include "sort.h"
 
 /**
- * counting_sort - Sorts an array of integers in ascending order
- * using the Counting sort algorithm.
- * @array: The array to be sorted.
- * @size: The number of elements in the @array.
+ * shell_sort - Sorts an array of integers in ascending order
+ * using Shell sort algorithm, using Knuth sequence
+ * @array: The array to be sorted
+ * @size: The number of elements in @array
  *
  */
 
-void counting_sort(int *array, size_t size)
+void shell_sort(int *array, size_t size)
 {
-	int max = 0, i = 1;
-	int *count = NULL, *temp = NULL;
+	size_t i, j = 0;
+	size_t gap = 1;
+	int temp = 0;
 
 	if (!array || size < 2)
 		return;
-	max = array[0];
-	while (i < (int)size)
-	{
-		if (array[i] > max)
-			max = array[i];
-		i++;
-	}
-	temp = malloc(sizeof(int) * size);
-	if (!temp)
-		return;
-	count = malloc(sizeof(int) * max + 1);
-	if (!count)
-	{
-		free(temp);
-		return;
-	}
 
-	for (i = 0; i <= (int)max; ++i)
-		count[i] = 0;
-	for (i = 0; i < (int)size; ++i)
-		count[array[i]]++;
-	for (i = 1; i <= (int)max; ++i)
-		count[i] = count[i - 1] + count[i];
-	print_array(count, max + 1);
-	for (i = 0; i < (int)size; ++i)
-	{
-		temp[count[array[i]] - 1] = array[i];
-		count[array[i]]--;
-	}
-	for (i = 0; i < (int)size; ++i)
-		array[i] = temp[i];
+	while (gap < size / 3)
+		gap = gap * 3 + 1;
 
-	free(count);
-	free(temp);
+	while (gap > 0)
+	{
+		i = gap;
+		while (i < size)
+		{
+			temp = array[i];
+			j = i;
+
+			while ((j > gap - 1) && array[j - gap] >= temp)
+			{
+				array[j] = array[j - gap];
+				j = j - gap;
+			}
+
+			array[j] = temp;
+			i++;
+		}
+		print_array(array, size);
+		gap = (gap - 1) / 3;
+	}
 }
 
